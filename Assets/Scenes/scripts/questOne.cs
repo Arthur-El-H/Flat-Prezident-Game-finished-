@@ -18,7 +18,6 @@ public class questOne : AbstractQuestion
     }
     public override void logInTwo()
     {
-        //
         database.akdNoGeography = true;
         gotoNextQuestion();
     }
