@@ -7,7 +7,8 @@ But you have to stick with it, if you contradict yourself, you loose.
 
 	What is next?
 - One question needs to be changed for clarity
-- Some small feature changes
+- Skip-function is added
+- Refactoring
 
 
 Stack used: Unity2D, Visual Studio, C#
