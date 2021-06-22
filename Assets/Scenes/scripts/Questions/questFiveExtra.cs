@@ -36,7 +36,7 @@ public class questFiveExtra : AbstractQuestion
         questionManager.currentQuestion = gameManager.q6;
         gameManager.clearAnswers();
         gameManager.setCurrentQuest(gameManager.q6);
-        gameManager.poseQuestion();
+        gameManager.createQuestionView();
     }
 
     public override string getQuestion()

@@ -23,7 +23,7 @@ public class questFive : AbstractQuestion
         gameManager.clearAnswers();
         gameManager.setCurrentQuest(gameManager.q5e);
         questionManager.currentQuestion = gameManager.q5e;
-        gameManager.poseQuestion();
+        gameManager.createQuestionView();
     }
 
     public override void logInThree()
@@ -38,7 +38,7 @@ public class questFive : AbstractQuestion
         questionManager.currentQuestion = gameManager.q6;
         gameManager.clearAnswers();
         gameManager.setCurrentQuest(gameManager.q6);
-        gameManager.poseQuestion();
+        gameManager.createQuestionView();
     }
 
     public override string getQuestion()

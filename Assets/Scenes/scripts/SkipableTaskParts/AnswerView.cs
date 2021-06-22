@@ -28,7 +28,6 @@ public class AnswerView : MonoBehaviour, ISkipablePartOfTask_VIEW
     {
         answer.SetActive(false);
         answerBackground.SetActive(false);
-        gameManager.enableLastQuestion(true);
         close();
     }
 
@@ -41,7 +40,6 @@ public class AnswerView : MonoBehaviour, ISkipablePartOfTask_VIEW
         yield return new WaitForSeconds(secondsToShow);
         answer.SetActive(false);
         answerBackground.SetActive(false);
-        gameManager.enableLastQuestion(true);
         close();
     }
 

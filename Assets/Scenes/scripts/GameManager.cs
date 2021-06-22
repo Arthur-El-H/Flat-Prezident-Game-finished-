@@ -55,13 +55,16 @@ public class GameManager : MonoBehaviour
     public database database;
     //GameObject currentScene;
     public AbstractQuestion currentQuest;
+    public void setCurrentQuest(AbstractQuestion q) { currentQuest = q; }
+
+
     public ISkipablePartOfTask_VIEW currentSkipableView;
 
     [SerializeField] GameObject QuestionViewHolderPrefab;
     [SerializeField] GameObject AnswerViewHolderPrefab;
     [SerializeField] GameObject SceneViewHolderPrefab;
 
-    Queue<GameObject> runningSkipableTasks = new Queue<GameObject>();
+    Queue<ISkipablePartOfTask_VIEW> runningSkipableTasks = new Queue<ISkipablePartOfTask_VIEW>();
 
 
     public GameObject lastQuestion;
@@ -69,6 +72,7 @@ public class GameManager : MonoBehaviour
     {
         sceneManager.setScene(Startscreen);
 
+       
         q1 = quest1.GetComponent<AbstractQuestion>();
         q2 = quest2.GetComponent<AbstractQuestion>();
         q3 = quest3.GetComponent<AbstractQuestion>();
@@ -83,10 +87,11 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 30;
     }
 
-    public void setCurrentQuest(AbstractQuestion q) { currentQuest = q; }
 
     bool readyToStart = true;
     bool lastQuestionShowable = false;
+    bool lastQuestionisShowing;
+
     public void enableLastQuestion(bool enable)
     {
         lastQuestionShowable = enable;
@@ -94,12 +99,24 @@ public class GameManager : MonoBehaviour
 
     public void showLastQuestion()
     {
-        if (lastQuestionShowable) { lastQuestion.GetComponent<UnityEngine.UI.Text>().text = currentQuest.getQuestion(); }
+        if (lastQuestionShowable) 
+        {
+            if (!lastQuestionisShowing)
+            {
+                lastQuestion.GetComponent<UnityEngine.UI.Text>().text = currentQuest.getQuestion(); 
+                lastQuestionisShowing = true;
+            }
+            else
+            {
+                clearLastQuestion();
+            }
+        }
     }
 
     public void clearLastQuestion()
     {
-        lastQuestion.GetComponent<UnityEngine.UI.Text>().text = ""; 
+        lastQuestion.GetComponent<UnityEngine.UI.Text>().text = "";
+        lastQuestionisShowing = false;
     }
 
 
@@ -120,38 +137,6 @@ public class GameManager : MonoBehaviour
         sceneManager.setScene(nextScene);
     }
 
-    IEnumerator showQuestion(int secondsTowait, int secondsToShow, bool firstScene = false)
-    {
-        yield return new WaitForSeconds(secondsTowait);
-        sceneManager.setScene(Totale);
-        if (firstScene)
-        {
-            question.GetComponent<UnityEngine.UI.Text>().text = "So you are saying that the earth is flat?";
-        }
-        else 
-        { 
-            question.GetComponent<UnityEngine.UI.Text>().text = currentQuest.getQuestion();
-        }
-
-        questionBackground.SetActive(true);
-        question.SetActive(true);
-        yield return new WaitForSeconds(secondsToShow);
-
-        if (!firstScene)
-        {
-            ansBtn1.SetActive(true);
-            ansBtn2.SetActive(true);
-            ansBtn3.SetActive(true);
-        }
-
-        question.SetActive(false);
-        questionBackground.SetActive(false);
-        if(!firstScene)
-        {
-            sceneManager.setScene(Nahe);
-            showPossibleAnswers();
-        }
-    }
 
     IEnumerator showAnswer(int secondsTowait, int secondsToShow, string ans)
     {
@@ -177,33 +162,15 @@ public class GameManager : MonoBehaviour
 
         soundManager.startSound();
 
-        poseQuestion(3, true);
+        createQuestionView(3, true);
 
-        StartCoroutine(goToNextScene(Nahe, 7));
-        StartCoroutine(goToNextScene(Speech, 10));
-        StartCoroutine(goToNextScene(Uhr, 12));
+        createSceneView(7, Nahe);
+        createSceneView(10, Speech);
+        createSceneView(12, Uhr);
+        createSceneView(14, Nahe);
 
-        StartCoroutine(goToNextScene(Nahe, 14));
         StartCoroutine(showAnswer(17, 5, "... um... yes!... that's exactly what I'm trying to say!"));
-        poseQuestion(22);
-    }
-
-    int playSetOfScenesCounterVariable;
-    int maxFramesOfScenery;
-    public void skipPlaySetOfScenes()
-    {
-        playSetOfScenesCounterVariable = maxFramesOfScenery;
-    }
-
-    IEnumerator playSetOfScenes(List <GameObject> Scenes, List <int> secondsTowait)
-    {
-        maxFramesOfScenery = secondsTowait[secondsTowait.Count] * 30;
-        int sceneCounter = 0;
-        for (playSetOfScenesCounterVariable = 0; playSetOfScenesCounterVariable < maxFramesOfScenery; playSetOfScenesCounterVariable++)
-        {
-            if (secondsTowait[sceneCounter] == playSetOfScenesCounterVariable / 30) { sceneManager.setScene(Scenes[sceneCounter]); sceneCounter++; }
-            yield return new WaitForEndOfFrame();
-        }
+        createQuestionView(22);
     }
 
     void reinitialize()
@@ -215,13 +182,6 @@ public class GameManager : MonoBehaviour
         questionManager.currentQuestion = q1;
 
         database.init();
-    }
-
-    public void poseQuestion(int secondsToWait = 0, bool firstQuestion = false)
-    {
-        Debug.Log("Creation qv");
-        currentSkipableView = createQuestionView(secondsToWait, 4, firstQuestion).GetComponent<ISkipablePartOfTask_VIEW>();
-        //StartCoroutine(showQuestion(secondsToWait, 7, firstQuestion));
     }
 
     public void showPossibleAnswers()
@@ -286,12 +246,11 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private GameObject createQuestionView(int secondsToWait, int secondsToShow, bool firstScene = false)
+    public ISkipablePartOfTask_VIEW createQuestionView(int secondsToWait = 0, bool firstScene = false)
     {
         GameObject taskHolder = Instantiate(QuestionViewHolderPrefab);
         QuestionView qv = taskHolder.GetComponent<QuestionView>();
         qv.question = question; // right one?
-        qv.secondsToShow = secondsToShow;
         qv.secondsTowait = secondsToWait;
         qv.gameManager = this;
         qv.sceneData = sceneData;
@@ -299,11 +258,12 @@ public class GameManager : MonoBehaviour
         qv.questionBackground = questionBackground;
         qv.firstScene = firstScene;
 
+        runningSkipableTasks.Enqueue(qv);
         Debug.Log("Created qv");
         //taskHolder.AddComponent<QuestionView>(qv);
-        return taskHolder;
+        return qv;
     }
-    private GameObject createAnswerView(int secondsToWait, int secondsToShow, string ans)
+    public ISkipablePartOfTask_VIEW createAnswerView(int secondsToWait, int secondsToShow, string ans)
     {
         GameObject taskHolder = Instantiate(AnswerViewHolderPrefab);
         AnswerView av = taskHolder.GetComponent<AnswerView>();
@@ -313,21 +273,28 @@ public class GameManager : MonoBehaviour
         av.answerBackground = answerBackground;
         av.answer = answer;
 
+        runningSkipableTasks.Enqueue(av);
         Debug.Log("Created av");
-        return taskHolder;
+        return av;
     }
-    private GameObject createSceneView(int secondsToWait, GameObject nextScene)
+    public ISkipablePartOfTask_VIEW createSceneView(int secondsToWait, GameObject nextScene)
     {
         GameObject taskHolder = Instantiate(SceneViewHolderPrefab);
         SceneView sv = taskHolder.GetComponent<SceneView>();
         sv.secondsTowait = secondsToWait;
         sv.sceneManager = sceneManager;
         sv.nextScene = nextScene;
-        return taskHolder;
+
+        runningSkipableTasks.Enqueue(sv);
+        return sv;
     }
 
     public void skip()
     {
-        currentSkipableView.skipToGoal();
+        while(runningSkipableTasks.Count > 0)
+        {
+            runningSkipableTasks.Dequeue().skipToGoal();
+        }
+        Debug.Log("Got out of skip-loop");
     }
 }

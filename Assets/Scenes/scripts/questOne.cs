@@ -33,7 +33,7 @@ public class questOne : AbstractQuestion
         questionManager.currentQuestion = gameManager.q2;
         gameManager.clearAnswers();
         gameManager.setCurrentQuest(gameManager.q2);
-        gameManager.poseQuestion();
+        gameManager.createQuestionView();
     }
 
     public override string getQuestion()
