@@ -57,12 +57,10 @@ public class GameManager : MonoBehaviour
     public AbstractQuestion currentQuest;
     public void setCurrentQuest(AbstractQuestion q) { currentQuest = q; }
 
-
-    public ISkipablePartOfTask_VIEW currentSkipableView;
-
     [SerializeField] GameObject QuestionViewHolderPrefab;
     [SerializeField] GameObject AnswerViewHolderPrefab;
     [SerializeField] GameObject SceneViewHolderPrefab;
+    [SerializeField] GameObject ParadoxLossViewHolderPrefab;
 
     Queue<ISkipablePartOfTask_VIEW> runningSkipableTasks = new Queue<ISkipablePartOfTask_VIEW>();
 
@@ -137,20 +135,6 @@ public class GameManager : MonoBehaviour
         sceneManager.setScene(nextScene);
     }
 
-
-    IEnumerator showAnswer(int secondsTowait, int secondsToShow, string ans)
-    {
-        yield return new WaitForSeconds(secondsTowait);
-        answer.GetComponent<UnityEngine.UI.Text>().text = ans;
-        answerBackground.SetActive(true);
-        answer.SetActive(true);
-        yield return new WaitForSeconds(secondsToShow);
-        answer.SetActive(false);
-        answerBackground.SetActive(false);
-
-        lastQuestionShowable = true;
-    }
-
     public void startGame()
     {
         if (!readyToStart) { return; }
@@ -169,7 +153,8 @@ public class GameManager : MonoBehaviour
         createSceneView(12, Uhr);
         createSceneView(14, Nahe);
 
-        StartCoroutine(showAnswer(17, 5, "... um... yes!... that's exactly what I'm trying to say!"));
+        createAnswerView(17, 5, "... um... yes!... that's exactly what I'm trying to say!");
+        //StartCoroutine(showAnswer(17, 5, "... um... yes!... that's exactly what I'm trying to say!"));
         createQuestionView(22);
     }
 
@@ -200,27 +185,24 @@ public class GameManager : MonoBehaviour
 
     public void loose(string reason)
     {
-        clearAnswers();
-        StartCoroutine(setRdyToStart(11));
-        ansBtn1.SetActive(false);
-        ansBtn2.SetActive(false);
-        ansBtn3.SetActive(false);
-        sceneManager.setScene(Journalistin);
-        StartCoroutine(showLossReason(reason));
-        StartCoroutine(goToNextScene(gameOver, 10));
+        //sceneManager.setScene(Journalistin);
+        createSceneView(0, Journalistin);
+        createParadoxLossView(reason);
     }
 
+    //Winning
+    #region
     public void winBig()
     {
         enableAnswerButtons(false);
-        StartCoroutine(setRdyToStart(4));
+        setRdyToStart();
         sceneManager.setScene(goodWin);
     }
 
     public void winNormal()
     {
         enableAnswerButtons(false);
-        StartCoroutine(setRdyToStart(4));
+        setRdyToStart();
         sceneManager.setScene(normalWin);
     }
 
@@ -230,10 +212,10 @@ public class GameManager : MonoBehaviour
         if (database.helpForSouthAfrica || database.newReform) { winBig(); }
         else { winNormal(); }
     }
+    #endregion
 
-    IEnumerator setRdyToStart(int secondsTowait)
+    public void setRdyToStart()
     {
-        yield return new WaitForSeconds(secondsTowait);
         readyToStart = true;
     }
 
@@ -245,6 +227,22 @@ public class GameManager : MonoBehaviour
         ansBtn3.SetActive(enable);
     }
 
+    public ISkipablePartOfTask_VIEW createParadoxLossView(string reason)
+    {
+        GameObject taskHolder = Instantiate(ParadoxLossViewHolderPrefab);
+        ParadoxLossView pv = taskHolder.GetComponent<ParadoxLossView>();
+
+        pv.gameManager = this;
+        pv.sceneManager = sceneManager;
+        pv.reason = reason;
+
+        pv.lossReason = lossReason;
+        pv.lossReasonBackground = lossReasonBackground;
+        pv.gameOver = gameOver;
+
+        runningSkipableTasks.Enqueue(pv);
+        return pv;
+    }
 
     public ISkipablePartOfTask_VIEW createQuestionView(int secondsToWait = 0, bool firstScene = false)
     {
@@ -272,6 +270,7 @@ public class GameManager : MonoBehaviour
         av.gameManager = this;
         av.answerBackground = answerBackground;
         av.answer = answer;
+        av.ans = ans;
 
         runningSkipableTasks.Enqueue(av);
         Debug.Log("Created av");

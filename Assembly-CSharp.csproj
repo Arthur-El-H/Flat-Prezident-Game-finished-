@@ -75,6 +75,7 @@
     <Compile Include="Assets\Scenes\scripts\SceneDatabase.cs" />
     <Compile Include="Assets\Scenes\scripts\SceneManager.cs" />
     <Compile Include="Assets\Scenes\scripts\SkipableTaskParts\AnswerView.cs" />
+    <Compile Include="Assets\Scenes\scripts\SkipableTaskParts\ParadoxLossView.cs" />
     <Compile Include="Assets\Scenes\scripts\SkipableTaskParts\QuestionView.cs" />
     <Compile Include="Assets\Scenes\scripts\SkipableTaskParts\SceneView.cs" />
     <Compile Include="Assets\Scenes\scripts\SoundManager.cs" />

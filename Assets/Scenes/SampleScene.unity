@@ -2866,7 +2866,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Show Question
+  m_Text: last Question
 --- !u!222 &1317101214
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4489,6 +4489,8 @@ MonoBehaviour:
   AnswerViewHolderPrefab: {fileID: 2535533123205779257, guid: c980db33450ead149af2411fd67e4385,
     type: 3}
   SceneViewHolderPrefab: {fileID: 6564657830519254211, guid: 1a2cd9b995867a14aaf287064f2920d0,
+    type: 3}
+  ParadoxLossViewHolderPrefab: {fileID: 2537036744293232756, guid: e057a4f574012c44784c83ba40bb23c4,
     type: 3}
   lastQuestion: {fileID: 371438657}
 --- !u!4 &1925999858

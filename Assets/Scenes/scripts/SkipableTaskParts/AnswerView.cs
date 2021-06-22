@@ -4,34 +4,28 @@ using UnityEngine;
 
 public class AnswerView : MonoBehaviour, ISkipablePartOfTask_VIEW
 {
-    public AnswerView(int secondsTowait, int secondsToShow, 
-                      GameObject answerBackGround, GameObject answer, GameManager gameManager, 
-                      string ans)
-    {
-        this.secondsTowait = secondsTowait;
-        this.secondsToShow = secondsToShow;
-        this.answer = answer;
-        this.answerBackground = answerBackGround;
-        this.gameManager = gameManager;
-        this.ans = ans;
-    }
-
     public int secondsTowait;
     public int secondsToShow;
     public GameManager gameManager;
     public GameObject answerBackground;
     public GameObject answer;
+    private Coroutine currentAnswerView;
 
-    string ans;
+    public string ans;
 
     public void skipToGoal()
     {
         answer.SetActive(false);
         answerBackground.SetActive(false);
+        StopCoroutine(currentAnswerView);
         close();
     }
+    public void Start()
+    {
+        currentAnswerView = StartCoroutine(DoTask());
+    }
 
-    IEnumerator Start()
+    IEnumerator DoTask()
     {
         yield return new WaitForSeconds(secondsTowait);
         answer.GetComponent<UnityEngine.UI.Text>().text = ans;

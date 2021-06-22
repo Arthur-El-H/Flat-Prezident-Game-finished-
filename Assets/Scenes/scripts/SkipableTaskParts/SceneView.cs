@@ -18,15 +18,20 @@ public class SceneView : MonoBehaviour, ISkipablePartOfTask_VIEW
     public int secondsTowait;
     public GameObject nextScene;
     public SceneManager sceneManager;
-
+    private Coroutine currenSceneView;
 
     public void skipToGoal()
     {
         sceneManager.setScene(nextScene);
+        StopCoroutine(currenSceneView);
         close();
     }
+    public void Start()
+    {
+        currenSceneView = StartCoroutine(DoTask());
+    }
 
-    IEnumerator Start()
+    IEnumerator DoTask()
     {
         yield return new WaitForSeconds(secondsTowait);
         sceneManager.setScene(nextScene);
