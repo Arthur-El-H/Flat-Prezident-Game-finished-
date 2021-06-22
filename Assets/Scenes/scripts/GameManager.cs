@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
     public AbstractQuestion q5e;
     public AbstractQuestion q6;
 
-
     public GameObject Nahe;
     public GameObject Totale;
     public GameObject Journalistin;
@@ -48,30 +47,74 @@ public class GameManager : MonoBehaviour
     public GameObject ansBtn2;
     public GameObject ansBtn3;
 
+    public SoundManager soundManager;
     public questionManager questionManager;
+    public SceneDatabase sceneData;
+    public SceneManager sceneManager;
 
     public database database;
-    GameObject currentScene;
-    AbstractQuestion currentQuest;
-
-    public AudioSource soundscape;
-    public AudioSource soundtrack;
-
-    public GameObject lastQuestion;
-
-
+    //GameObject currentScene;
+    public AbstractQuestion currentQuest;
     public void setCurrentQuest(AbstractQuestion q) { currentQuest = q; }
 
+    [SerializeField] GameObject QuestionViewHolderPrefab;
+    [SerializeField] GameObject AnswerViewHolderPrefab;
+    [SerializeField] GameObject SceneViewHolderPrefab;
+    [SerializeField] GameObject ParadoxLossViewHolderPrefab;
+
+    Queue<ISkipablePartOfTask_VIEW> runningSkipableTasks = new Queue<ISkipablePartOfTask_VIEW>();
+
+
+    public GameObject lastQuestion;
+    void Start()
+    {
+        sceneManager.setScene(Startscreen);
+
+       
+        q1 = quest1.GetComponent<AbstractQuestion>();
+        q2 = quest2.GetComponent<AbstractQuestion>();
+        q3 = quest3.GetComponent<AbstractQuestion>();
+        q4 = quest4.GetComponent<AbstractQuestion>();
+        q5 = quest5.GetComponent<AbstractQuestion>();
+        q5e = quest5extra.GetComponent<AbstractQuestion>();
+        q6 = quest6.GetComponent<AbstractQuestion>();
+
+        currentQuest = q1;
+        questionManager.currentQuestion = currentQuest;
+
+        Application.targetFrameRate = 30;
+    }
+
+
     bool readyToStart = true;
+    bool lastQuestionShowable = false;
+    bool lastQuestionisShowing;
+
+    public void enableLastQuestion(bool enable)
+    {
+        lastQuestionShowable = enable;
+    }
 
     public void showLastQuestion()
     {
-        if (!readyToStart) { lastQuestion.GetComponent<UnityEngine.UI.Text>().text = currentQuest.getQuestion(); }
+        if (lastQuestionShowable) 
+        {
+            if (!lastQuestionisShowing)
+            {
+                lastQuestion.GetComponent<UnityEngine.UI.Text>().text = currentQuest.getQuestion(); 
+                lastQuestionisShowing = true;
+            }
+            else
+            {
+                clearLastQuestion();
+            }
+        }
     }
 
     public void clearLastQuestion()
     {
-        lastQuestion.GetComponent<UnityEngine.UI.Text>().text = ""; 
+        lastQuestion.GetComponent<UnityEngine.UI.Text>().text = "";
+        lastQuestionisShowing = false;
     }
 
 
@@ -81,7 +124,6 @@ public class GameManager : MonoBehaviour
         lossReasonBackground.SetActive(true);
         lossReason.SetActive(true);
         lossReason.GetComponent<UnityEngine.UI.Text>().text = reason;
-        Debug.Log(reason);
         yield return new WaitForSeconds(7);
         lossReasonBackground.SetActive(false);
         lossReason.SetActive(false);
@@ -90,80 +132,33 @@ public class GameManager : MonoBehaviour
     IEnumerator goToNextScene(GameObject nextScene, int secondsTowait)
     {
         yield return new WaitForSeconds(secondsTowait);
-        setScene(nextScene);
-    }
-
-    IEnumerator showQuestion(int secondsTowait, int secondsToShow, bool firstScene = false)
-    {
-        yield return new WaitForSeconds(secondsTowait);
-        setScene(Totale);
-        if (firstScene)
-        {
-            question.GetComponent<UnityEngine.UI.Text>().text = "So you are saying that the earth is flat?";
-        }
-        else 
-        { 
-            question.GetComponent<UnityEngine.UI.Text>().text = currentQuest.getQuestion();
-        }
-
-        questionBackground.SetActive(true);
-        question.SetActive(true);
-        yield return new WaitForSeconds(secondsToShow);
-
-        if (!firstScene)
-        {
-            ansBtn1.SetActive(true);
-            ansBtn2.SetActive(true);
-            ansBtn3.SetActive(true);
-        }
-
-
-        question.SetActive(false);
-        questionBackground.SetActive(false);
-        if(!firstScene)
-        {
-            setScene(Nahe);
-            showPossibleAnswers();
-        }
-    }
-
-    IEnumerator showAnswer(int secondsTowait, int secondsToShow, string ans)
-    {
-        yield return new WaitForSeconds(secondsTowait);
-        answer.GetComponent<UnityEngine.UI.Text>().text = ans;
-        answerBackground.SetActive(true);
-        answer.SetActive(true);
-        yield return new WaitForSeconds(secondsToShow);
-        answer.SetActive(false);
-        answerBackground.SetActive(false);
+        sceneManager.setScene(nextScene);
     }
 
     public void startGame()
     {
         if (!readyToStart) { return; }
 
-        initialize();
+        reinitialize();
 
         readyToStart = false;
-        setScene(Nahe);
-        soundtrack.loop = true;
-        soundscape.loop = true;
-        soundscape.Play();
+        sceneManager.setScene(Nahe);
 
-        StartCoroutine(showQuestion(3, 4, true));
-        //StartCoroutine(goToNextScene(Totale, 3));
+        soundManager.startSound();
 
-        StartCoroutine(goToNextScene(Nahe, 7));
-        StartCoroutine(goToNextScene(Speech, 10));
-        StartCoroutine(goToNextScene(Uhr, 12));
+        createQuestionView(3, true);
 
-        StartCoroutine(goToNextScene(Nahe, 14));
-        StartCoroutine(showAnswer(17, 5, "... um... yes!... that's exactly what I'm trying to say!"));
+        createSceneView(7, Nahe);
+        createSceneView(10, Speech);
+        createSceneView(12, Uhr);
+        createSceneView(14, Nahe);
 
-        poseQuestion(22);
+        createAnswerView(17, 5, "... um... yes!... that's exactly what I'm trying to say!");
+        //StartCoroutine(showAnswer(17, 5, "... um... yes!... that's exactly what I'm trying to say!"));
+        createQuestionView(22);
     }
 
-    void initialize()
+    void reinitialize()
     {
         lossReason.SetActive(false);
         lossReasonBackground.SetActive(false);
@@ -174,20 +169,7 @@ public class GameManager : MonoBehaviour
         database.init();
     }
 
-    void setScene(GameObject newScene)
-    {
-        clearLastQuestion();
-        currentScene.SetActive(false);
-        currentScene = newScene;
-        currentScene.SetActive(true);
-    }
-
-    public void poseQuestion(int secondsToWait = 0)
-    {
-        StartCoroutine(showQuestion(secondsToWait, 7));
-    }
-
-    void showPossibleAnswers()
+    public void showPossibleAnswers()
     {
         ans1.GetComponent<UnityEngine.UI.Text>().text = currentQuest.getOne();
         ans2.GetComponent<UnityEngine.UI.Text>().text = currentQuest.getTwo();
@@ -203,32 +185,25 @@ public class GameManager : MonoBehaviour
 
     public void loose(string reason)
     {
-        clearAnswers();
-        StartCoroutine(setRdyToStart(11));
-        ansBtn1.SetActive(false);
-        ansBtn2.SetActive(false);
-        ansBtn3.SetActive(false);
-        setScene(Journalistin);
-        StartCoroutine(showLossReason(reason));
-        StartCoroutine(goToNextScene(gameOver, 10));
+        //sceneManager.setScene(Journalistin);
+        createSceneView(0, Journalistin);
+        createParadoxLossView(reason);
     }
 
+    //Winning
+    #region
     public void winBig()
     {
-        ansBtn1.SetActive(false);
-        ansBtn2.SetActive(false);
-        ansBtn3.SetActive(false);
-        StartCoroutine(setRdyToStart(4));
-        setScene(goodWin);
+        enableAnswerButtons(false);
+        setRdyToStart();
+        sceneManager.setScene(goodWin);
     }
 
     public void winNormal()
     {
-        ansBtn1.SetActive(false);
-        ansBtn2.SetActive(false);
-        ansBtn3.SetActive(false);
-        StartCoroutine(setRdyToStart(4));
-        setScene(normalWin);
+        enableAnswerButtons(false);
+        setRdyToStart();
+        sceneManager.setScene(normalWin);
     }
 
     public void win()
@@ -237,57 +212,88 @@ public class GameManager : MonoBehaviour
         if (database.helpForSouthAfrica || database.newReform) { winBig(); }
         else { winNormal(); }
     }
+    #endregion
 
-    IEnumerator setRdyToStart(int secondsTowait)
+    public void setRdyToStart()
     {
-        yield return new WaitForSeconds(secondsTowait);
         readyToStart = true;
     }
 
 
-    // Start is called before the first frame update
-    void Start()
+    public void enableAnswerButtons(bool enable)
     {
-        currentScene = Startscreen;
-        currentScene.SetActive(true);
-
-        q1 = quest1.GetComponent<AbstractQuestion>();
-        q2 = quest2.GetComponent<AbstractQuestion>();
-        q3 = quest3.GetComponent<AbstractQuestion>();
-        q4 = quest4.GetComponent<AbstractQuestion>();
-        q5 = quest5.GetComponent<AbstractQuestion>();
-        q5e = quest5extra.GetComponent<AbstractQuestion>();
-        q6 = quest6.GetComponent<AbstractQuestion>();
-
-        currentQuest = q1;
-        questionManager.currentQuestion = currentQuest;
-
-        soundtrack.loop = true;
+        ansBtn1.SetActive(enable);
+        ansBtn2.SetActive(enable);
+        ansBtn3.SetActive(enable);
     }
 
-    // Update is called once per frame
-
-    bool sound = true;
-    public void toggleSound()
+    public ISkipablePartOfTask_VIEW createParadoxLossView(string reason)
     {
-        if (sound)
-        {
-            Debug.Log("hier");
-            soundtrack.Stop();
-            soundscape.Stop();
-            sound = false;
-        }
+        GameObject taskHolder = Instantiate(ParadoxLossViewHolderPrefab);
+        ParadoxLossView pv = taskHolder.GetComponent<ParadoxLossView>();
 
-        else
-        {
-            Debug.Log("da");
-            soundtrack.Play();
-            soundscape.Play();
-            soundscape.loop = true; 
-            soundtrack.loop = true; 
-            sound = true; 
-        }
+        pv.gameManager = this;
+        pv.sceneManager = sceneManager;
+        pv.reason = reason;
+
+        pv.lossReason = lossReason;
+        pv.lossReasonBackground = lossReasonBackground;
+        pv.gameOver = gameOver;
+
+        runningSkipableTasks.Enqueue(pv);
+        return pv;
     }
 
+    public ISkipablePartOfTask_VIEW createQuestionView(int secondsToWait = 0, bool firstScene = false)
+    {
+        GameObject taskHolder = Instantiate(QuestionViewHolderPrefab);
+        QuestionView qv = taskHolder.GetComponent<QuestionView>();
+        qv.question = question; // right one?
+        qv.secondsTowait = secondsToWait;
+        qv.gameManager = this;
+        qv.sceneData = sceneData;
+        qv.sceneManager = sceneManager;
+        qv.questionBackground = questionBackground;
+        qv.firstScene = firstScene;
 
+        runningSkipableTasks.Enqueue(qv);
+        Debug.Log("Created qv");
+        //taskHolder.AddComponent<QuestionView>(qv);
+        return qv;
+    }
+    public ISkipablePartOfTask_VIEW createAnswerView(int secondsToWait, int secondsToShow, string ans)
+    {
+        GameObject taskHolder = Instantiate(AnswerViewHolderPrefab);
+        AnswerView av = taskHolder.GetComponent<AnswerView>();
+        av.secondsToShow = secondsToShow;
+        av.secondsTowait = secondsToWait;
+        av.gameManager = this;
+        av.answerBackground = answerBackground;
+        av.answer = answer;
+        av.ans = ans;
+
+        runningSkipableTasks.Enqueue(av);
+        Debug.Log("Created av");
+        return av;
+    }
+    public ISkipablePartOfTask_VIEW createSceneView(int secondsToWait, GameObject nextScene)
+    {
+        GameObject taskHolder = Instantiate(SceneViewHolderPrefab);
+        SceneView sv = taskHolder.GetComponent<SceneView>();
+        sv.secondsTowait = secondsToWait;
+        sv.sceneManager = sceneManager;
+        sv.nextScene = nextScene;
+
+        runningSkipableTasks.Enqueue(sv);
+        return sv;
+    }
+
+    public void skip()
+    {
+        while(runningSkipableTasks.Count > 0)
+        {
+            runningSkipableTasks.Dequeue().skipToGoal();
+        }
+        Debug.Log("Got out of skip-loop");
+    }
 }

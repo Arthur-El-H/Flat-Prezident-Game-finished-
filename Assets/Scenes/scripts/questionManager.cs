@@ -6,34 +6,22 @@ public class questionManager : MonoBehaviour
 {
     public AbstractQuestion currentQuestion;
     public GameManager gameManager;
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
 
     public void logInOne()
     {
         gameManager.clearAnswers();
         currentQuestion.logInOne();
+        gameManager.enableLastQuestion(false);
     }
     public void logInTwo()
     {
         currentQuestion.logInTwo();
+        gameManager.enableLastQuestion(false);
     }
 
     public void logInThree()
     {
         currentQuestion.logInThree();
+        gameManager.enableLastQuestion(false);
     }
-
-    public void test()
-    {
-        Debug.Log("test");
-    }
-
 }
