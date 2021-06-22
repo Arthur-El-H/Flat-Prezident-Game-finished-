@@ -21,36 +21,39 @@ public class QuestionView : MonoBehaviour, ISkipablePartOfTask_VIEW
         this.firstScene = firstScene;
     }
 
-    int secondsTowait;
-    int secondsToShow;
-    GameManager gameManager;
-    SceneManager sceneManager;
-    SceneDatabase sceneData;
+    public int secondsTowait;
+    public int secondsToShow;
+    public GameManager gameManager;
+    public SceneManager sceneManager;
+    public SceneDatabase sceneData;
 
     public GameObject questionBackground;
     public GameObject question;
+    Coroutine currentQuestionView;
 
-    bool firstScene;
+    public bool firstScene;
 
     public void skipToGoal()
     {
+        StopCoroutine(currentQuestionView);
+        Debug.Log("Skipped");
         if (!firstScene)
         {
             gameManager.enableAnswerButtons(true);
             sceneManager.setScene(sceneData.Nahe);
             gameManager.showPossibleAnswers();
         }
+        question.SetActive(false);
+        questionBackground.SetActive(false);
         close();
     }
     public void Start()
     {
-        Debug.Log("Created and concious!");
-        StartCoroutine(DoTask());
+        currentQuestionView =  StartCoroutine(DoTask());
     }
 
     IEnumerator DoTask()
     {
-        Debug.Log("Station 1");
         yield return new WaitForSeconds(secondsTowait);
         sceneManager.setScene(sceneData.Totale);
         if (firstScene)
@@ -59,8 +62,6 @@ public class QuestionView : MonoBehaviour, ISkipablePartOfTask_VIEW
             questionBackground.SetActive(true);
             question.SetActive(true);
             yield return new WaitForSeconds(secondsToShow);
-            question.SetActive(false);
-            questionBackground.SetActive(false);
         }
         else
         {
@@ -72,12 +73,15 @@ public class QuestionView : MonoBehaviour, ISkipablePartOfTask_VIEW
             sceneManager.setScene(sceneData.Nahe);
             gameManager.showPossibleAnswers();
         }
-        Debug.Log("Station 9");
+        Debug.Log("This called it all!");
+        question.SetActive(false);
+        questionBackground.SetActive(false);
     }
 
 
     void close()
     {
+        Debug.Log("This is closed now");
         Destroy(this);
     }
 }

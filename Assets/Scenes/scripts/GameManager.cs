@@ -53,11 +53,35 @@ public class GameManager : MonoBehaviour
     public SceneManager sceneManager;
 
     public database database;
-    GameObject currentScene;
+    //GameObject currentScene;
     public AbstractQuestion currentQuest;
+    public ISkipablePartOfTask_VIEW currentSkipableView;
+
+    [SerializeField] GameObject QuestionViewHolderPrefab;
+    [SerializeField] GameObject AnswerViewHolderPrefab;
+    [SerializeField] GameObject SceneViewHolderPrefab;
+
+    Queue<GameObject> runningSkipableTasks = new Queue<GameObject>();
 
 
     public GameObject lastQuestion;
+    void Start()
+    {
+        sceneManager.setScene(Startscreen);
+
+        q1 = quest1.GetComponent<AbstractQuestion>();
+        q2 = quest2.GetComponent<AbstractQuestion>();
+        q3 = quest3.GetComponent<AbstractQuestion>();
+        q4 = quest4.GetComponent<AbstractQuestion>();
+        q5 = quest5.GetComponent<AbstractQuestion>();
+        q5e = quest5extra.GetComponent<AbstractQuestion>();
+        q6 = quest6.GetComponent<AbstractQuestion>();
+
+        currentQuest = q1;
+        questionManager.currentQuestion = currentQuest;
+
+        Application.targetFrameRate = 30;
+    }
 
     public void setCurrentQuest(AbstractQuestion q) { currentQuest = q; }
 
@@ -196,7 +220,7 @@ public class GameManager : MonoBehaviour
     public void poseQuestion(int secondsToWait = 0, bool firstQuestion = false)
     {
         Debug.Log("Creation qv");
-        createQuestionView(secondsToWait, 4, firstQuestion);
+        currentSkipableView = createQuestionView(secondsToWait, 4, firstQuestion).GetComponent<ISkipablePartOfTask_VIEW>();
         //StartCoroutine(showQuestion(secondsToWait, 7, firstQuestion));
     }
 
@@ -253,23 +277,6 @@ public class GameManager : MonoBehaviour
         readyToStart = true;
     }
 
-    void Start()
-    {
-        sceneManager.setScene(Startscreen);
-
-        q1 = quest1.GetComponent<AbstractQuestion>();
-        q2 = quest2.GetComponent<AbstractQuestion>();
-        q3 = quest3.GetComponent<AbstractQuestion>();
-        q4 = quest4.GetComponent<AbstractQuestion>();
-        q5 = quest5.GetComponent<AbstractQuestion>();
-        q5e = quest5extra.GetComponent<AbstractQuestion>();
-        q6 = quest6.GetComponent<AbstractQuestion>();
-
-        currentQuest = q1;
-        questionManager.currentQuestion = currentQuest;
-
-        Application.targetFrameRate = 30;
-    }
 
     public void enableAnswerButtons(bool enable)
     {
@@ -279,28 +286,48 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private QuestionView createQuestionView(int secondsToWait, int secondsToShow, bool firstScene = false)
+    private GameObject createQuestionView(int secondsToWait, int secondsToShow, bool firstScene = false)
     {
-        GameObject taskHolder = new GameObject();
-        QuestionView qv = new QuestionView(secondsToWait, secondsToShow,
-                                questionBackground, question, this, sceneManager, sceneData,
-                                firstScene);
+        GameObject taskHolder = Instantiate(QuestionViewHolderPrefab);
+        QuestionView qv = taskHolder.GetComponent<QuestionView>();
+        qv.question = question; // right one?
+        qv.secondsToShow = secondsToShow;
+        qv.secondsTowait = secondsToWait;
+        qv.gameManager = this;
+        qv.sceneData = sceneData;
+        qv.sceneManager = sceneManager;
+        qv.questionBackground = questionBackground;
+        qv.firstScene = firstScene;
+
         Debug.Log("Created qv");
-        taskHolder.AddComponent<QuestionView>(qv);
-        return qv;
+        //taskHolder.AddComponent<QuestionView>(qv);
+        return taskHolder;
     }
-    private AnswerView createAnswerView(int secondsToWait, int secondsToShow, string ans)
+    private GameObject createAnswerView(int secondsToWait, int secondsToShow, string ans)
     {
-        AnswerView av = new AnswerView(secondsToWait, secondsToShow,
-                                answerBackground, answer, this,
-                                ans);
-        return av;
+        GameObject taskHolder = Instantiate(AnswerViewHolderPrefab);
+        AnswerView av = taskHolder.GetComponent<AnswerView>();
+        av.secondsToShow = secondsToShow;
+        av.secondsTowait = secondsToWait;
+        av.gameManager = this;
+        av.answerBackground = answerBackground;
+        av.answer = answer;
+
+        Debug.Log("Created av");
+        return taskHolder;
     }
-    private SceneView createSceneView(int secondsToWait, GameObject nextScene)
+    private GameObject createSceneView(int secondsToWait, GameObject nextScene)
     {
-        SceneView sv = new SceneView(secondsToWait,
-                                nextScene,
-                                sceneManager);
-        return sv;
+        GameObject taskHolder = Instantiate(SceneViewHolderPrefab);
+        SceneView sv = taskHolder.GetComponent<SceneView>();
+        sv.secondsTowait = secondsToWait;
+        sv.sceneManager = sceneManager;
+        sv.nextScene = nextScene;
+        return taskHolder;
+    }
+
+    public void skip()
+    {
+        currentSkipableView.skipToGoal();
     }
 }

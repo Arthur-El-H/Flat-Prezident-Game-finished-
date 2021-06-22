@@ -15,9 +15,9 @@ public class SceneView : MonoBehaviour, ISkipablePartOfTask_VIEW
         this.sceneManager = sceneManager;
     }
 
-    int secondsTowait;
-    GameObject nextScene;
-    SceneManager sceneManager;
+    public int secondsTowait;
+    public GameObject nextScene;
+    public SceneManager sceneManager;
 
 
     public void skipToGoal()

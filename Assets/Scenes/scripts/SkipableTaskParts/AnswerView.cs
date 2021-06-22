@@ -16,11 +16,11 @@ public class AnswerView : MonoBehaviour, ISkipablePartOfTask_VIEW
         this.ans = ans;
     }
 
-    int secondsTowait;
-    int secondsToShow;
-    GameObject answerBackground;
-    GameObject answer;
-    GameManager gameManager;
+    public int secondsTowait;
+    public int secondsToShow;
+    public GameManager gameManager;
+    public GameObject answerBackground;
+    public GameObject answer;
 
     string ans;
 
