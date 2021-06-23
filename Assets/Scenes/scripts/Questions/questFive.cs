@@ -5,6 +5,8 @@ using UnityEngine;
 public class questFive : AbstractQuestion
 {
     public GameManager gameManager;
+    [SerializeField] AnswerManager answerManager;
+
 
     public string Question = "Even though Argentina is blocking the vote around Section 104, would you send the ships with aid to South Africa?";
     public string answerOne = "We do it anyway, because Argentina as an invented state has no voting rights at all!";
@@ -20,7 +22,7 @@ public class questFive : AbstractQuestion
 
     public override void logInTwo()
     {
-        gameManager.clearAnswers();
+        answerManager.clearAnswers();
         gameManager.setCurrentQuest(gameManager.q5e);
         questionManager.currentQuestion = gameManager.q5e;
         gameManager.createQuestionView();
@@ -36,7 +38,7 @@ public class questFive : AbstractQuestion
     void gotoNextQuestion()
     {
         questionManager.currentQuestion = gameManager.q6;
-        gameManager.clearAnswers();
+        answerManager.clearAnswers();
         gameManager.setCurrentQuest(gameManager.q6);
         gameManager.createQuestionView();
     }

@@ -8,6 +8,8 @@ public class ParadoxLossView: MonoBehaviour, ISkipablePartOfTask_VIEW
     public int secondsToShow;
     public GameManager gameManager;
     public SceneManager sceneManager;
+    public AnswerManager answerManager;
+
     public string reason;
 
     public GameObject lossReason;
@@ -31,8 +33,8 @@ public class ParadoxLossView: MonoBehaviour, ISkipablePartOfTask_VIEW
 
     IEnumerator DoTask()
     {
-        gameManager.clearAnswers();
-        gameManager.enableAnswerButtons(false);
+        answerManager.clearAnswers();
+        answerManager.enableAnswerButtons(false);
 
         yield return new WaitForSeconds(secondsTowait);
         lossReasonBackground.SetActive(true);

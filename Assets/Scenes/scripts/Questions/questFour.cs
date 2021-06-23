@@ -5,6 +5,7 @@ using UnityEngine;
 public class questFour : AbstractQuestion
 {
     public GameManager gameManager;
+    [SerializeField] AnswerManager answerManager;
 
     public string Question = "So would you say that your impressively successful diplomatic stay in Australia didn't happen at all?";
     public string answerOne = "Without this stay, Section 104 would not have even come up for a vote!";
@@ -32,7 +33,7 @@ public class questFour : AbstractQuestion
     void gotoNextQuestion()
     {
         questionManager.currentQuestion = gameManager.q5;
-        gameManager.clearAnswers();
+        answerManager.clearAnswers();
         gameManager.setCurrentQuest(gameManager.q5);
         gameManager.createQuestionView();
     }

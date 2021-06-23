@@ -6,10 +6,12 @@ public class questionManager : MonoBehaviour
 {
     public AbstractQuestion currentQuestion;
     public GameManager gameManager;
+    [SerializeField] AnswerManager answerManager;
+
 
     public void logInOne()
     {
-        gameManager.clearAnswers();
+        answerManager.clearAnswers();
         currentQuestion.logInOne();
         gameManager.enableLastQuestion(false);
     }

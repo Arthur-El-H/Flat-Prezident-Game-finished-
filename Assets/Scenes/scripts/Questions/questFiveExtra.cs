@@ -5,6 +5,7 @@ using UnityEngine;
 public class questFiveExtra : AbstractQuestion
 {
     public GameManager gameManager;
+    [SerializeField] AnswerManager answerManager;
 
     public string Question = "So there are no relief supplies for South Africa?";
     public string answerOne = "There will be relief supplies!";
@@ -34,7 +35,7 @@ public class questFiveExtra : AbstractQuestion
     void gotoNextQuestion()
     {
         questionManager.currentQuestion = gameManager.q6;
-        gameManager.clearAnswers();
+        answerManager.clearAnswers();
         gameManager.setCurrentQuest(gameManager.q6);
         gameManager.createQuestionView();
     }

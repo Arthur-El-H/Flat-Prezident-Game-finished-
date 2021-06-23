@@ -1587,7 +1587,7 @@ GameObject:
   - component: {fileID: 722117476}
   - component: {fileID: 722117475}
   m_Layer: 5
-  m_Name: One
+  m_Name: AnsBtnOne
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1812,6 +1812,7 @@ MonoBehaviour:
   database: {fileID: 892918225}
   questionManager: {fileID: 2140790550}
   gameManager: {fileID: 1925999857}
+  answerManager: {fileID: 1448776328}
   Question: 'Would you say that all countries south of the equator do not exist? '
   answerOne: We would never deny the existence of our diplomatic partners!
   answerTwo: You got it! They do not exist!
@@ -2698,6 +2699,7 @@ MonoBehaviour:
   database: {fileID: 892918225}
   questionManager: {fileID: 2140790550}
   gameManager: {fileID: 1925999857}
+  answerManager: {fileID: 1448776328}
   Question: So would you say that your impressively successful diplomatic stay in
     Australia didn't happen at all?
   answerOne: Without this stay, Section 104 would not have even come up for a vote!
@@ -3110,6 +3112,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1429823725}
   m_CullTransparentMesh: 0
+--- !u!1 &1448776327
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1448776329}
+  - component: {fileID: 1448776328}
+  m_Layer: 0
+  m_Name: AnswerManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1448776328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1448776327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f425926f6eb8f484aa783da2efcef5d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 1925999857}
+  ans1: {fileID: 96114990}
+  ans2: {fileID: 968410459}
+  ans3: {fileID: 1332210384}
+  ansBtn1: {fileID: 722117473}
+  ansBtn2: {fileID: 2025032249}
+  ansBtn3: {fileID: 1589224506}
+--- !u!4 &1448776329
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1448776327}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 305.78976, y: 168.62056, z: -117.74138}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1558021233
 GameObject:
   m_ObjectHideFlags: 0
@@ -3142,6 +3194,7 @@ MonoBehaviour:
   database: {fileID: 892918225}
   questionManager: {fileID: 2140790550}
   gameManager: {fileID: 1925999857}
+  answerManager: {fileID: 1448776328}
   Question: Would you say that the Academy of Science is not a trustworthy source?
   answerOne: The Academy works reliably of course!
   answerTwo: The academy works reliably, but on geographical issues it would be better
@@ -3175,7 +3228,7 @@ GameObject:
   - component: {fileID: 1589224509}
   - component: {fileID: 1589224508}
   m_Layer: 5
-  m_Name: Three
+  m_Name: AnsBtnThree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4263,6 +4316,7 @@ MonoBehaviour:
   database: {fileID: 892918225}
   questionManager: {fileID: 2140790550}
   gameManager: {fileID: 1925999857}
+  answerManager: {fileID: 1448776328}
   Question: So there are no relief supplies for South Africa?
   answerOne: Exactly!
   answerTwo: No!
@@ -4313,6 +4367,7 @@ MonoBehaviour:
   database: {fileID: 892918225}
   questionManager: {fileID: 2140790550}
   gameManager: {fileID: 1925999857}
+  answerManager: {fileID: 1448776328}
   Question: Even though Argentina is blocking the vote around Section 104, would
     you send the ships with aid to South Africa?
   answerOne: We do it anyway, because Argentina as an invented state has no voting
@@ -4472,9 +4527,6 @@ MonoBehaviour:
   answer: {fileID: 424301746}
   lossReasonBackground: {fileID: 1158234393}
   lossReason: {fileID: 313060513}
-  ans1: {fileID: 96114990}
-  ans2: {fileID: 968410459}
-  ans3: {fileID: 1332210384}
   ansBtn1: {fileID: 722117473}
   ansBtn2: {fileID: 2025032249}
   ansBtn3: {fileID: 1589224506}
@@ -4482,6 +4534,7 @@ MonoBehaviour:
   questionManager: {fileID: 2140790550}
   sceneData: {fileID: 34091674}
   sceneManager: {fileID: 1140352403}
+  answerManager: {fileID: 1448776328}
   database: {fileID: 892918225}
   currentQuest: {fileID: 0}
   QuestionViewHolderPrefab: {fileID: 945972967513694018, guid: 0374fbec5f7edd944af72f1aef0ddd36,
@@ -4539,6 +4592,7 @@ MonoBehaviour:
   database: {fileID: 892918225}
   questionManager: {fileID: 2140790550}
   gameManager: {fileID: 1925999857}
+  answerManager: {fileID: 1448776328}
   Question: Would you say that the history books need to be changed?
   answerOne: No, the physics books need this more urgently!
   answerTwo: Of course! This is urgently needed!
@@ -4571,7 +4625,7 @@ GameObject:
   - component: {fileID: 2025032252}
   - component: {fileID: 2025032251}
   m_Layer: 5
-  m_Name: Two
+  m_Name: AnsBtnTwo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4765,6 +4819,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentQuestion: {fileID: 0}
   gameManager: {fileID: 1925999857}
+  answerManager: {fileID: 1448776328}
 --- !u!4 &2140790551
 Transform:
   m_ObjectHideFlags: 0

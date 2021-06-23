@@ -5,6 +5,7 @@ using UnityEngine;
 public class questTwo : AbstractQuestion
 {
     public GameManager gameManager;
+    [SerializeField] AnswerManager answerManager;
 
     public string Question = "Would you say that all countries south of the equator do not exist?";
     public string answerOne = "We would never deny the existence of our diplomatic partners!";
@@ -31,7 +32,7 @@ public class questTwo : AbstractQuestion
     void gotoNextQuestion()
     {
         questionManager.currentQuestion = gameManager.q3;
-        gameManager.clearAnswers();
+        answerManager.clearAnswers();
         gameManager.setCurrentQuest(gameManager.q3);
         gameManager.createQuestionView();
     }

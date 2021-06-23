@@ -5,6 +5,7 @@ using UnityEngine;
 public class questOne : AbstractQuestion
 {
     public GameManager gameManager;
+    [SerializeField] AnswerManager answerManager;
 
     public string Question = "Would you say that the Academy of Science is not a trustworthy source?";
     public string answerOne = "The Academy works reliably of course!";
@@ -31,7 +32,7 @@ public class questOne : AbstractQuestion
     void gotoNextQuestion()
     {
         questionManager.currentQuestion = gameManager.q2;
-        gameManager.clearAnswers();
+        answerManager.clearAnswers();
         gameManager.setCurrentQuest(gameManager.q2);
         gameManager.createQuestionView();
     }

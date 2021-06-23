@@ -5,6 +5,7 @@ using UnityEngine;
 public class questThree : AbstractQuestion
 {
     public GameManager gameManager;
+    [SerializeField] AnswerManager answerManager;
 
     public string Question = "Would you say that the history books need to be changed?";
     public string answerOne = "No, the physics books need this more urgently!";
@@ -30,7 +31,7 @@ public class questThree : AbstractQuestion
     void gotoNextQuestion()
     {
         questionManager.currentQuestion = gameManager.q4;
-        gameManager.clearAnswers();
+        answerManager.clearAnswers();
         gameManager.setCurrentQuest(gameManager.q4);
         gameManager.createQuestionView();
     }

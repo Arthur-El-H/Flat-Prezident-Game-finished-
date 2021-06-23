@@ -64,7 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scenes\scripts\Abstract_Question.cs" />
+    <Compile Include="Assets\Scenes\scripts\AnswerManager.cs" />
     <Compile Include="Assets\Scenes\scripts\GameManager.cs" />
+    <Compile Include="Assets\Scenes\scripts\LastQuestionView.cs" />
     <Compile Include="Assets\Scenes\scripts\Questions\Interfaces.cs" />
     <Compile Include="Assets\Scenes\scripts\Questions\questFive.cs" />
     <Compile Include="Assets\Scenes\scripts\Questions\questFiveExtra.cs" />
