@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
     public SceneDatabase sceneData;
     public SceneManager sceneManager;
     public AnswerManager answerManager;
+    public LastQuestionView lastQuestionViewManager;
 
     public database database;
     public AbstractQuestion currentQuest;
@@ -57,8 +58,6 @@ public class GameManager : MonoBehaviour
 
     Queue<ISkipablePartOfTask_VIEW> runningSkipableTasks = new Queue<ISkipablePartOfTask_VIEW>();
 
-    bool lastQuestionShowable = false;
-    bool lastQuestionisShowing;
     bool readyToStart = true;
 
     void Start()
@@ -115,40 +114,6 @@ public class GameManager : MonoBehaviour
 
         database.init();
     }
-
-    //last Question
-    #region
-
-    public GameObject lastQuestion;
-
-    public void enableLastQuestion(bool enable)
-    {
-        lastQuestionShowable = enable;
-    }
-
-    public void showLastQuestion()
-    {
-        if (lastQuestionShowable)
-        {
-            if (!lastQuestionisShowing)
-            {
-                lastQuestion.GetComponent<UnityEngine.UI.Text>().text = currentQuest.getQuestion();
-                lastQuestionisShowing = true;
-            }
-            else
-            {
-                clearLastQuestion();
-            }
-        }
-    }
-
-    public void clearLastQuestion()
-    {
-        lastQuestion.GetComponent<UnityEngine.UI.Text>().text = "";
-        lastQuestionisShowing = false;
-    }
-
-    #endregion
 
     //Winning and Loosing
     #region
@@ -211,6 +176,7 @@ public class GameManager : MonoBehaviour
         qv.questionBackground = questionBackground;
         qv.firstScene = firstScene;
         qv.answerManager = answerManager;
+        qv.lastQuestionViewManager = lastQuestionViewManager;
 
         runningSkipableTasks.Enqueue(qv);
         //taskHolder.AddComponent<QuestionView>(qv);

@@ -5,11 +5,12 @@ using UnityEngine;
 public class SceneManager : MonoBehaviour
 {
     public GameManager gameManager;
+    [SerializeField] LastQuestionView lastQuestionViewManager;
     GameObject currentScene;
 
     public void setScene(GameObject newScene)
     {
-        gameManager.clearLastQuestion();
+        lastQuestionViewManager.clearLastQuestion();
         currentScene?.SetActive(false);
         currentScene = newScene;
         currentScene.SetActive(true);

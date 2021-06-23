@@ -10,6 +10,7 @@ public class QuestionView : MonoBehaviour, ISkipablePartOfTask_VIEW
     public SceneManager sceneManager;
     public SceneDatabase sceneData;
     public AnswerManager answerManager;
+    public LastQuestionView lastQuestionViewManager;
 
     public GameObject questionBackground;
     public GameObject question;
@@ -28,7 +29,7 @@ public class QuestionView : MonoBehaviour, ISkipablePartOfTask_VIEW
         }
         question.SetActive(false);
         questionBackground.SetActive(false);
-        gameManager.enableLastQuestion(true);
+        lastQuestionViewManager.enableLastQuestion(true);
         close();
     }
     public void Start()
@@ -57,7 +58,7 @@ public class QuestionView : MonoBehaviour, ISkipablePartOfTask_VIEW
             answerManager.enableAnswerButtons(true);
             sceneManager.setScene(sceneData.Nahe);
             answerManager.showPossibleAnswers();
-            gameManager.enableLastQuestion(true);
+            lastQuestionViewManager.enableLastQuestion(true);
         }
         question.SetActive(false);
         questionBackground.SetActive(false);

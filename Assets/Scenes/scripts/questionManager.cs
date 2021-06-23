@@ -7,23 +7,24 @@ public class questionManager : MonoBehaviour
     public AbstractQuestion currentQuestion;
     public GameManager gameManager;
     [SerializeField] AnswerManager answerManager;
+    [SerializeField] LastQuestionView lastQuestionViewManager;
 
 
     public void logInOne()
     {
         answerManager.clearAnswers();
         currentQuestion.logInOne();
-        gameManager.enableLastQuestion(false);
+        lastQuestionViewManager.enableLastQuestion(false);
     }
     public void logInTwo()
     {
         currentQuestion.logInTwo();
-        gameManager.enableLastQuestion(false);
+        lastQuestionViewManager.enableLastQuestion(false);
     }
 
     public void logInThree()
     {
         currentQuestion.logInThree();
-        gameManager.enableLastQuestion(false);
+        lastQuestionViewManager.enableLastQuestion(false);
     }
 }

@@ -1574,6 +1574,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 690156734}
   m_CullTransparentMesh: 0
+--- !u!1 &706609708
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 706609710}
+  - component: {fileID: 706609709}
+  m_Layer: 0
+  m_Name: LastQuestionViewManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &706609709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 706609708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afe57a56d11120244a8f23a88fdc9b95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 1925999857}
+  lastQuestion: {fileID: 371438657}
+--- !u!4 &706609710
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 706609708}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 305.78976, y: 168.62056, z: -117.74138}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &722117473
 GameObject:
   m_ObjectHideFlags: 0
@@ -2534,6 +2579,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 1925999857}
+  lastQuestionViewManager: {fileID: 706609709}
 --- !u!4 &1140352404
 Transform:
   m_ObjectHideFlags: 0
@@ -4527,14 +4573,12 @@ MonoBehaviour:
   answer: {fileID: 424301746}
   lossReasonBackground: {fileID: 1158234393}
   lossReason: {fileID: 313060513}
-  ansBtn1: {fileID: 722117473}
-  ansBtn2: {fileID: 2025032249}
-  ansBtn3: {fileID: 1589224506}
   soundManager: {fileID: 2097305846}
   questionManager: {fileID: 2140790550}
   sceneData: {fileID: 34091674}
   sceneManager: {fileID: 1140352403}
   answerManager: {fileID: 1448776328}
+  lastQuestionViewManager: {fileID: 706609709}
   database: {fileID: 892918225}
   currentQuest: {fileID: 0}
   QuestionViewHolderPrefab: {fileID: 945972967513694018, guid: 0374fbec5f7edd944af72f1aef0ddd36,
@@ -4545,7 +4589,6 @@ MonoBehaviour:
     type: 3}
   ParadoxLossViewHolderPrefab: {fileID: 2537036744293232756, guid: e057a4f574012c44784c83ba40bb23c4,
     type: 3}
-  lastQuestion: {fileID: 371438657}
 --- !u!4 &1925999858
 Transform:
   m_ObjectHideFlags: 0
@@ -4820,6 +4863,7 @@ MonoBehaviour:
   currentQuestion: {fileID: 0}
   gameManager: {fileID: 1925999857}
   answerManager: {fileID: 1448776328}
+  lastQuestionViewManager: {fileID: 706609709}
 --- !u!4 &2140790551
 Transform:
   m_ObjectHideFlags: 0

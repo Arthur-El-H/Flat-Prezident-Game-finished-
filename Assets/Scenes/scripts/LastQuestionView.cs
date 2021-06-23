@@ -4,15 +4,35 @@ using UnityEngine;
 
 public class LastQuestionView : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] GameManager gameManager;
+    [SerializeField] GameObject lastQuestion;
+    bool lastQuestionShowable;
+    bool lastQuestionisShowing;
+
+    public void enableLastQuestion(bool enable)
     {
-        
+        lastQuestionShowable = enable;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void showLastQuestion()
     {
-        
+        if (lastQuestionShowable)
+        {
+            if (!lastQuestionisShowing)
+            {
+                lastQuestion.GetComponent<UnityEngine.UI.Text>().text = gameManager.currentQuest.getQuestion();
+                lastQuestionisShowing = true;
+            }
+            else
+            {
+                clearLastQuestion();
+            }
+        }
+    }
+
+    public void clearLastQuestion()
+    {
+        lastQuestion.GetComponent<UnityEngine.UI.Text>().text = "";
+        lastQuestionisShowing = false;
     }
 }
